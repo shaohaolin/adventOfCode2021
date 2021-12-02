@@ -1,0 +1,9 @@
+{
+  "name": "adventofcode2021",
+  "version": "1.0.0",
+  "author": "Shaohao Lin",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "2.5.0"
+  }
+}
