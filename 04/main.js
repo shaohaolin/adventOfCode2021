@@ -21,9 +21,6 @@ const rawBoards = input.slice(1).map((line) => {
     );
   }
 });
-// console.log(input);
-// console.log(draws);
-// console.log(boards[2]);
 
 // find the number on the board and set isMatched to true
 function findMatchesNumber(selectedNumber, board) {
@@ -34,7 +31,7 @@ function findMatchesNumber(selectedNumber, board) {
       columnIndex++
     ) {
       const element = board[rowIndex][columnIndex];
-      if (element.value === selectedNumber) {
+      if (element.value == selectedNumber) {
         element.isMatched = true;
         break;
       }
@@ -46,22 +43,22 @@ function checkWinner(board) {
   // check each row to have five isMatched to be true
   for (let rowIndex = 0; rowIndex < board.length; rowIndex++) {
     if (board[rowIndex].filter((element) => element.isMatched).length === 5) {
-      console.log(`Row Bingo!`);
-      console.log(JSON.stringify(board[rowIndex]));
+      // console.log(`Row Bingo!`);
+      // console.log(JSON.stringify(board[rowIndex]));
       return true;
     }
   }
 
   // check each column to have five isMatched to be true
-  for (let columnIndex = 0; columnIndex < board[0].length; columnIndex++) {
+  for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
     let matchesColumn = [];
     for (let rowIndex = 0; rowIndex < board.length; rowIndex++) {
       const element = board[rowIndex][columnIndex];
       if (element.isMatched) {
         matchesColumn.push(element);
         if (matchesColumn.length === 5) {
-          console.log(`Column Bingo!`);
-          console.log(JSON.stringify(matchesColumn));
+          // console.log(`Column Bingo!`);
+          // console.log(JSON.stringify(matchesColumn));
           return true;
         }
       }
@@ -87,19 +84,47 @@ function calculateReslt(board, number) {
   console.log(sum * number);
 }
 
-let isBingo = false;
+function findFirstWinner() {
+  let isBingo = false;
+  for (let index = 0; index < draws.length; index++) {
+    const selectedNumber = draws[index];
+    for (let boardIndex = 0; boardIndex < boards.length; boardIndex++) {
+      findMatchesNumber(selectedNumber, boards[boardIndex]);
+      if (checkWinner(boards[boardIndex])) {
+        calculateReslt(boards[boardIndex], selectedNumber);
+        isBingo = true;
+        break;
+      }
+    }
 
-for (let index = 0; index < draws.length; index++) {
-  const selectedNumber = draws[index];
-
-  for (let boardIndex = 0; boardIndex < boards.length; boardIndex++) {
-    findMatchesNumber(selectedNumber, boards[boardIndex]);
-    if (checkWinner(boards[boardIndex])) {
-      console.log(`Bingo on board ${boardIndex}`);
-      calculateReslt(boards[boardIndex], selectedNumber);
-      isBingo = true;
+    if (isBingo) {
       break;
     }
   }
-  if (isBingo) break;
 }
+
+// Find the last winner board
+function findLastWinner() {
+  let bingoOrder = [];
+  for (let index = 0; index < draws.length; index++) {
+    const selectedNumber = draws[index];
+    for (let boardIndex = 0; boardIndex < boards.length; boardIndex++) {
+      if (bingoOrder.includes(boardIndex)) {
+        continue;
+      }
+      findMatchesNumber(selectedNumber, boards[boardIndex]);
+      if (checkWinner(boards[boardIndex])) {
+        // console.log(`Bingo on board ${boardIndex}`);
+
+        bingoOrder.push(boardIndex);
+        if (bingoOrder.length === boards.length) {
+          calculateReslt(boards[boardIndex], selectedNumber);
+        }
+        continue;
+      }
+    }
+  }
+}
+
+findFirstWinner();
+findLastWinner();
