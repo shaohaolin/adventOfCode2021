@@ -13,26 +13,17 @@ const desceding = (a, b) => {
   }
 };
 
-function factorialize(num) {
-  if (num < 0) return;
-  else if (num == 0) return 0;
-  else {
-    return num + factorialize(num - 1);
-  }
-}
-
 const positions = file.split(",").map((x) => parseInt(x, 10));
 const sortedPositions = positions.sort(desceding);
 
 const length = sortedPositions.length;
 const biggestNumber = sortedPositions[length - 1];
 const fuelArray = [];
-console.log(biggestNumber);
 for (let index = 0; index < biggestNumber; index++) {
   let totalFuel = 0;
   for (let crabIndex = 0; crabIndex < sortedPositions.length; crabIndex++) {
     let delta = Math.abs(sortedPositions[crabIndex] - index);
-    let eachFuel = factorialize(delta);
+    let eachFuel = (delta * (delta + 1)) / 2;
     totalFuel = totalFuel + eachFuel;
   }
   fuelArray.push(totalFuel);
